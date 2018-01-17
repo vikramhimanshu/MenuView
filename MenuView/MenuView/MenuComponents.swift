@@ -12,7 +12,7 @@ protocol Displayable {
     var title: String? { get }
 }
 
-struct Item : RawRepresentable {
+struct Element : RawRepresentable {
     
     typealias RawValue = String
     
@@ -23,37 +23,37 @@ struct Item : RawRepresentable {
     }
 }
 
-extension Item: Comparable {
-    public static func <(lhs: Item, rhs: Item) -> Bool {
+extension Element: Comparable {
+    public static func <(lhs: Element, rhs: Element) -> Bool {
         return lhs.rawValue < rhs.rawValue
     }
     
-    public static func <=(lhs: Item, rhs: Item) -> Bool {
+    public static func <=(lhs: Element, rhs: Element) -> Bool {
         return lhs.rawValue <= rhs.rawValue
     }
     
-    public static func >=(lhs: Item, rhs: Item) -> Bool {
+    public static func >=(lhs: Element, rhs: Element) -> Bool {
         return lhs.rawValue >= rhs.rawValue
     }
     
-    public static func >(lhs: Item, rhs: Item) -> Bool {
+    public static func >(lhs: Element, rhs: Element) -> Bool {
         return lhs.rawValue > rhs.rawValue
     }
 }
 
-extension Item: Hashable {
+extension Element: Hashable {
     public var hashValue: Int {
         return rawValue.hashValue
     }
 }
 
-extension Item: Equatable {
-    static func == (lhs: Item, rhs: Item) -> Bool {
+extension Element: Equatable {
+    static func == (lhs: Element, rhs: Element) -> Bool {
         return lhs.rawValue == rhs.rawValue
     }
 }
 
-extension Item: ExpressibleByStringLiteral {
+extension Element: ExpressibleByStringLiteral {
     init(stringLiteral value: String) {
         self.rawValue = value
     }
@@ -65,17 +65,18 @@ extension Item: ExpressibleByStringLiteral {
     }
 }
 
-struct Category : RawRepresentable, Equatable, Hashable, Comparable  {
+struct Category : RawRepresentable {
+    
+    typealias RawValue = String
+    
     var rawValue: String
     
     init(rawValue value: String) {
         self.rawValue = value
     }
-    
-    public var hashValue: Int {
-        return rawValue.hashValue
-    }
-    
+}
+
+extension Category: Comparable {
     public static func <(lhs: Category, rhs: Category) -> Bool {
         return lhs.rawValue < rhs.rawValue
     }
@@ -91,28 +92,38 @@ struct Category : RawRepresentable, Equatable, Hashable, Comparable  {
     public static func >(lhs: Category, rhs: Category) -> Bool {
         return lhs.rawValue > rhs.rawValue
     }
-    
+}
+
+extension Category: Hashable {
+    public var hashValue: Int {
+        return rawValue.hashValue
+    }
+}
+
+extension Category: Equatable {
     static func == (lhs: Category, rhs: Category) -> Bool {
         return lhs.rawValue == rhs.rawValue
     }
 }
 
+extension Category: ExpressibleByStringLiteral {
+    init(stringLiteral value: String) {
+        self.rawValue = value
+    }
+    init(unicodeScalarLiteral value: String) {
+        self.init(stringLiteral: value)
+    }
+    init(extendedGraphemeClusterLiteral value: String) {
+        self.init(stringLiteral: value)
+    }
+}
+
 protocol Section {
-    var items: [Item] { get }
+    var items: [Element] { get }
     var category: Category { get }
 }
 
-protocol MenuItem {
-    var item: Item { get }
+protocol Item {
+    var item: Element { get }
     var category: Category { get }
-}
-
-struct MenuSection : Section {
-    var items: [Item]
-    var category: Category
-}
-
-struct MainMenuItem : MenuItem {
-    var item: Item
-    var category: Category
 }

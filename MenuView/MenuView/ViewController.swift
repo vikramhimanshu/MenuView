@@ -10,8 +10,13 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    private var menu: MenuView?
+    private var menu: Menu?
     
+    struct MenuSection : Section {
+        var items: [Element]
+        var category: Category
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,11 +34,11 @@ class ViewController: UIViewController {
         v.delegate = self
         self.view.addSubview(v)
         
-        let i = UserMenuItem.one.rawValue
-        let i1 = UserMenuItem.two.rawValue
-        let i2 = UserMenuItem.two.rawValue
-        let i3 = UserMenuItem.two.rawValue
-        let i4 = UserMenuItem.two.rawValue
+        let i = Element.one
+        let i1 = Element.two
+        let i2 = Element.two
+        let i3 = Element.two
+        let i4 = Element.two
         let sec = MenuSection(items: [i, i1,i2,i3,i4], category: .some)
         v.setSections([sec])
         menu = v
@@ -51,8 +56,7 @@ class ViewController: UIViewController {
 
 extension ViewController : MenuDataSource {
     func sections(in menuView: Menu) -> [Section] {
-        let i = UserMenuItem.one
-        let sec = MenuSection(items: [i.rawValue], category: .some)
+        let sec = MenuSection(items: [.one], category: .some)
         return [sec]
     }
     
@@ -62,16 +66,42 @@ extension ViewController : MenuDataSource {
 }
 
 extension ViewController : MenuDelegate {
-    func menuView(_ menuView: Menu, didSelectItem item: MenuItem, at indexPath: IndexPath) {
+    func menuView(_ menuView: Menu, didSelectItem item: Item, at indexPath: IndexPath) {
         
     }
 }
 
-enum UserMenuItem : Item {
-    typealias RawValue = Item
-    case one, two , three, four, five, six, seven, eight
+extension Element {
+    static let one = Element(rawValue: "one")
+    static let two = Element(rawValue: "two")
+    static let three = Element(rawValue: "three")
+    static let four = Element(rawValue: "four")
+    static let five = Element(rawValue: "five")
+}
+
+extension Element : Displayable {
+    var title: String? {
+        switch self {
+        case .one:
+            return "First Menu Item"
+        case .two:
+            return "Second Menu Item"
+        default:
+            return "Default Menu Item"
+        }
+    }
 }
 
 extension Category {
     static let some = Category(rawValue: "some category")
+}
+extension Category : Displayable {
+    var title: String? {
+        switch self {
+        case .some:
+            return "Default"
+        default:
+            return nil
+        }
+    }
 }

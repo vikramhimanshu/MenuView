@@ -9,7 +9,7 @@
 import UIKit
 
 protocol MenuDelegate : class {
-    func menuView(_ menuView: Menu, didSelectItem item: MenuItem, at indexPath: IndexPath)
+    func menuView(_ menuView: Menu, didSelectItem item: Item, at indexPath: IndexPath)
 }
 
 protocol MenuDataSource : class {
@@ -158,6 +158,12 @@ extension MenuTableViewDelegate : UITableViewDelegate {
 }
 
 private extension MenuView {
+    
+    private struct MenuItem : Item {
+        var item: Element
+        var category: Category
+    }
+
     private func numberOfRowsInSection(section: Int) -> Int {
         return sections[section].items.count
     }
@@ -166,19 +172,21 @@ private extension MenuView {
         return sections.count
     }
     
-    private func item(atIndexPath indexPath: IndexPath) -> Item {
+    private func item(atIndexPath indexPath: IndexPath) -> Element {
         let section = sections[indexPath.section]
         let _item = section.items[indexPath.row]
         return _item
     }
+    
     private func section(atIndexPath indexPath: IndexPath) -> Section {
         let section = sections[indexPath.section]
         return section
     }
-    private func menuItem(forIndexPath indexPath: IndexPath) -> MenuItem {
-        let menuSection = sections[indexPath.section]
-        let item = menuSection.items[indexPath.row]
-        let mi = MainMenuItem(item: item, category: menuSection.category)
+    
+    private func menuItem(forIndexPath indexPath: IndexPath) -> Item {
+        let section = sections[indexPath.section]
+        let item = section.items[indexPath.row]
+        let mi = MenuItem(item: item, category: section.category)
         return mi
     }
 }
@@ -199,6 +207,7 @@ extension MenuTableViewDatasource : UITableViewDataSource {
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "default", for: indexPath)
             let _item = item(atIndexPath: indexPath)
+            
             if let _ditem = _item as? Displayable {
                 cell.textLabel?.text = _ditem.title
             } else {
@@ -206,10 +215,6 @@ extension MenuTableViewDatasource : UITableViewDataSource {
             }
             return cell
         }
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
