@@ -34,12 +34,12 @@ class ViewController: UIViewController {
         v.delegate = self
         self.view.addSubview(v)
         
-        let i = Element.one
-        let i1 = Element.two
-        let i2 = Element.two
-        let i3 = Element.two
-        let i4 = Element.two
-        let sec = MenuSection(items: [i, i1,i2,i3,i4], category: .some)
+        let i = MenuViewItems.one
+        let i1 = MenuViewItems.two
+        let i2 = MenuViewItems.two
+        let i3 = MenuViewItems.two
+        let i4 = MenuViewItems.two
+        let sec = MenuSection(items: [i,i1,i2,i3,i4], category: MenuViewCategory.some)
         v.setSections([sec])
         menu = v
     }
@@ -56,7 +56,7 @@ class ViewController: UIViewController {
 
 extension ViewController : MenuDataSource {
     func sections(in menuView: Menu) -> [Section] {
-        let sec = MenuSection(items: [.one], category: .some)
+        let sec = MenuSection(items: [MenuViewItems.one], category: MenuViewCategory.some)
         return [sec]
     }
     
@@ -71,15 +71,17 @@ extension ViewController : MenuDelegate {
     }
 }
 
-extension Element {
-    static let one = Element(rawValue: "one")
-    static let two = Element(rawValue: "two")
-    static let three = Element(rawValue: "three")
-    static let four = Element(rawValue: "four")
-    static let five = Element(rawValue: "five")
+enum MenuViewItems : DisplayableElement {
+    case one, two, three, four, five
 }
 
-extension Element : Displayable {
+extension MenuViewItems {
+    var icon: String? {
+        switch self {
+        default:
+            return nil
+        }
+    }
     var title: String? {
         switch self {
         case .one:
@@ -92,10 +94,18 @@ extension Element : Displayable {
     }
 }
 
-extension Category {
-    static let some = Category(rawValue: "some category")
+enum MenuViewCategory : Category {
+    case some
 }
-extension Category : Displayable {
+
+extension MenuViewCategory : Displayable {
+    var icon: String? {
+        switch self {
+        default:
+            return nil
+        }
+    }
+    
     var title: String? {
         switch self {
         case .some:

@@ -10,112 +10,19 @@ import Foundation
 
 protocol Displayable {
     var title: String? { get }
+    var icon: String? { get }
 }
 
-struct Element : RawRepresentable {
-    
-    typealias RawValue = String
-    
-    var rawValue: String
-    
-    init(rawValue value: String) {
-        self.rawValue = value
-    }
+protocol Element {
 }
 
-extension Element: Comparable {
-    public static func <(lhs: Element, rhs: Element) -> Bool {
-        return lhs.rawValue < rhs.rawValue
-    }
-    
-    public static func <=(lhs: Element, rhs: Element) -> Bool {
-        return lhs.rawValue <= rhs.rawValue
-    }
-    
-    public static func >=(lhs: Element, rhs: Element) -> Bool {
-        return lhs.rawValue >= rhs.rawValue
-    }
-    
-    public static func >(lhs: Element, rhs: Element) -> Bool {
-        return lhs.rawValue > rhs.rawValue
-    }
+protocol Category {
 }
 
-extension Element: Hashable {
-    public var hashValue: Int {
-        return rawValue.hashValue
-    }
+protocol DisplayableElement : Element, Displayable {
 }
 
-extension Element: Equatable {
-    static func == (lhs: Element, rhs: Element) -> Bool {
-        return lhs.rawValue == rhs.rawValue
-    }
-}
-
-extension Element: ExpressibleByStringLiteral {
-    init(stringLiteral value: String) {
-        self.rawValue = value
-    }
-    init(unicodeScalarLiteral value: String) {
-        self.init(stringLiteral: value)
-    }
-    init(extendedGraphemeClusterLiteral value: String) {
-        self.init(stringLiteral: value)
-    }
-}
-
-struct Category : RawRepresentable {
-    
-    typealias RawValue = String
-    
-    var rawValue: String
-    
-    init(rawValue value: String) {
-        self.rawValue = value
-    }
-}
-
-extension Category: Comparable {
-    public static func <(lhs: Category, rhs: Category) -> Bool {
-        return lhs.rawValue < rhs.rawValue
-    }
-    
-    public static func <=(lhs: Category, rhs: Category) -> Bool {
-        return lhs.rawValue <= rhs.rawValue
-    }
-    
-    public static func >=(lhs: Category, rhs: Category) -> Bool {
-        return lhs.rawValue >= rhs.rawValue
-    }
-    
-    public static func >(lhs: Category, rhs: Category) -> Bool {
-        return lhs.rawValue > rhs.rawValue
-    }
-}
-
-extension Category: Hashable {
-    public var hashValue: Int {
-        return rawValue.hashValue
-    }
-}
-
-extension Category: Equatable {
-    static func == (lhs: Category, rhs: Category) -> Bool {
-        return lhs.rawValue == rhs.rawValue
-    }
-}
-
-extension Category: ExpressibleByStringLiteral {
-    init(stringLiteral value: String) {
-        self.rawValue = value
-    }
-    init(unicodeScalarLiteral value: String) {
-        self.init(stringLiteral: value)
-    }
-    init(extendedGraphemeClusterLiteral value: String) {
-        self.init(stringLiteral: value)
-    }
+protocol DisplayableCategory : Category, Displayable {
 }
 
 protocol Section {
@@ -126,4 +33,10 @@ protocol Section {
 protocol Item {
     var item: Element { get }
     var category: Category { get }
+}
+
+protocol MenuItem :class {
+    var item: Item { get }
+    var children: [Self] { get }
+    weak var parent: Self? { get }
 }
